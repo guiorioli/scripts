@@ -74,6 +74,7 @@ pos_x=`echo $pos | awk '{print $4}'`
 pos_y=`echo $pos | awk '{print $5}'`
 pre_width=`echo $pos | awk '{print $6}'`
 pre_height=`echo $pos | awk '{print $7}'`
+wmctrl -r ":ACTIVE:" -b add,maximized_vert,maximized_horz
 wmctrl -r ":ACTIVE:" -b remove,maximized_vert,maximized_horz
 pos=`wmctrl -lGp | grep $pid`
 width=`echo $pos | awk '{print $6}'`
