@@ -91,27 +91,29 @@ echo "right height $right_height"
 echo "left_width   $left_width"
 echo "left_height  $left_height"
 echo
-echo "width = $width"
-echo "height = $height"
-echo "sending to $send_to"
-echo "maximize = $max"
-echo "invert = $invert"
+echo "height       $height"
+echo "width        $width"
+echo "sending to   $send_to"
+echo "maximize     $max"
+echo "invert       $invert"
 echo
 
 # Checks if window was maximized
-isMax=true
-if [ $pre_width == $width  ] && [ $pre_height == $height ]; then
-  # echo "not maximized"
+if [ "$pre_width" -eq "$width"  ] && [ "$pre_height" -eq "$height" ]; then
+  echo "not maximized - $pre_width = $width  && $pre_height = $height"
   isMax=false
+else
+  echo "maximized - $pre_width != $width  && $pre_height != $height"
+  isMax=true
 fi
 
 # Check for monitor's current position
-left=false
 if [ $((pos_x)) -lt $((left_width)) ]; then
   # echo is left
   left=true
 else
   # echo is right
+  left=false
 fi
 
 # Overrides default side to send, in case flags are used
@@ -151,6 +153,6 @@ echo "new position y = $new_pos_y"
 
 #Maximizes it, in case flag was used or if window was maximized
 if [ $max == true ] || [ $isMax == true ]; then
-  # echo "Maximizing"  
+  echo "Maximizing"  
   wmctrl -r ":ACTIVE:" -b add,maximized_vert,maximized_horz
 fi
