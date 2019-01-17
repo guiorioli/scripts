@@ -135,10 +135,10 @@ if [ $left == false ]; then
     new_pos_x=$(( (left_width-width)/2 ))
     new_pos_y=$(( (left_height-height)/2 ))
   else
-    curr_pos_x=$(( (pos_x-left_width)*100/right_width ))
-    new_pos_x=$(( curr_pos_x*left_width/100 ))
-    curr_pos_y=$(( pos_y*100/right_height ))
-    new_pos_y=$(( curr_pos_y*left_height/100 - offset))
+    curr_pos_x=$(( (pos_x - left_width)*100/(right_width - width) ))
+    new_pos_x=$(( curr_pos_x*(left_width - width)/100 ))
+    curr_pos_y=$(( pos_y*100/(right_height - height) ))
+    new_pos_y=$(( curr_pos_y*(left_height - height)/100 ))
     echo $new_pos_x
     echo $new_pos_y
   fi
@@ -148,10 +148,10 @@ else
     new_pos_x=$(( left_width+(right_width-width)/2 ))
     new_pos_y=$(( (right_height-height)/2 ))
   else
-    curr_pos_x=$(( (pos_x)*100/left_width ))
-    new_pos_x=$(( left_width + curr_pos_x*right_width/100 ))
-    curr_pos_y=$(( pos_y*100/left_height ))
-    new_pos_y=$(( curr_pos_y*right_height/100 - offset))
+    curr_pos_x=$(( (pos_x)*100/(left_width - width) ))
+    new_pos_x=$(( left_width + curr_pos_x*(right_width - width)/100 ))
+    curr_pos_y=$(( pos_y*100/(left_height - height) ))
+    new_pos_y=$(( curr_pos_y*(right_height - height)/100))
     echo $new_pos_x
     echo $new_pos_y
   fi
