@@ -20,6 +20,7 @@ if [ "$1" == "--help" ]; then
   echo " -x     - forces maximizing after sending"
   echo " -i     - Inverts default assumption that Primary monitor is on the left"
   echo " -c     - Also centers window"
+  echo " -d     - Debug"
 
   exit 0
 fi
@@ -28,15 +29,17 @@ invert=false  # Default setup assumes Primary monitor on the left. This flags in
 max=false     # Maximize after moving screen?
 send_to=""    # If no flag set, calculates and checks to which side should window be sent
 center=false  # Center window or try to keep its current position
+offset=40
 
 # test for flags
-while getopts "ilrx" flag; do
+while getopts "ilrxd" flag; do
   case "${flag}" in
     i) invert=true ;;
     l) send_to="l" ;;
     r) send_to="r" ;;
     x) max=true    ;;
     c) center=true ;;
+    d) debug=true  ;;
   esac
 done
 
@@ -135,7 +138,7 @@ if [ $left == false ]; then
     curr_pos_x=$(( (pos_x-left_width)*100/right_width ))
     new_pos_x=$(( curr_pos_x*left_width/100 ))
     curr_pos_y=$(( pos_y*100/right_height ))
-    new_pos_y=$(( curr_pos_y*left_height/100))
+    new_pos_y=$(( curr_pos_y*left_height/100 - offset))
     echo $new_pos_x
     echo $new_pos_y
   fi
@@ -148,7 +151,7 @@ else
     curr_pos_x=$(( (pos_x)*100/left_width ))
     new_pos_x=$(( left_width + curr_pos_x*right_width/100 ))
     curr_pos_y=$(( pos_y*100/left_height ))
-    new_pos_y=$(( curr_pos_y*right_height/100))
+    new_pos_y=$(( curr_pos_y*right_height/100 - offset))
     echo $new_pos_x
     echo $new_pos_y
   fi
@@ -164,4 +167,19 @@ echo "new position y = $new_pos_y"
 if [ $max == true ] || [ $isMax == true ]; then
   echo "Maximizing"  
   wmctrl -r ":ACTIVE:" -b add,maximized_vert,maximized_horz
+fi
+
+if [ $debug == true ]; then
+  #get window params
+  pos=`wmctrl -lGp | grep $pid`
+  pos_x=`echo $pos | awk '{print $4}'`
+  pos_y=`echo $pos | awk '{print $5}'`
+  pre_width=`echo $pos | awk '{print $6}'`
+  pre_height=`echo $pos | awk '{print $7}'`
+
+  echo ""
+  echo "final height  $pre_height"
+  echo "final width   $pre_width"
+  echo "position x    $pos_x"
+  echo "position y    $pos_y"
 fi
